@@ -10,10 +10,12 @@ const TABS = [
 ];
 
 const FRIENDS = [
-  { name: 'You', avatar: '🧑' },
-  { name: 'Friend 1', avatar: '👩' },
-  { name: 'Friend 2', avatar: '🧑‍🦱' },
-  { name: 'Friend 3', avatar: '👨' },
+  { name: 'Surya' },
+  { name: 'Shashank' },
+  { name: 'Raghavendra' },
+  { name: 'Nanda' },
+  { name: 'Mohan' },
+  { name: 'Naresh' },
 ];
 
 const ITINERARY_DETAILS = [
@@ -98,6 +100,21 @@ const ITINERARY_DETAILS = [
     ],
   },
 ];
+
+const PLACE_IMAGES = {
+  'Arrive in Goa, pick up bikes': '/public/goa-airport.jpg',
+  'Check-in at Mushrooms hotel': '/public/mushrooms-hotel.jpg',
+  'Relax or visit Bogmalo Beach': '/public/bogmalo-beach.jpg',
+  'Visit Old Goa (Basilica of Bom Jesus, Se Cathedral)': '/public/old-goa.jpg',
+  'Lunch at Goan restaurant': '/public/goan-restaurant.jpg',
+  'Explore Panaji, Miramar Beach, Dona Paula': '/public/panaji.jpg',
+  'North Goa beaches (Calangute, Baga, Anjuna)': '/public/north-goa-beaches.jpg',
+  'Visit Fort Aguada': '/public/fort-aguada.jpg',
+  'Anjuna Flea Market, beach shacks': '/public/anjuna-flea-market.jpg',
+  'Relax or visit Colva Beach': '/public/colva-beach.jpg',
+  'Shopping/café hopping': '/public/cafe-hopping.jpg',
+  'Return bikes, depart': '/public/goa-airport.jpg',
+};
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -252,7 +269,7 @@ function App() {
       <h2>Trip Details</h2>
       <div className="avatars">
         {FRIENDS.map(f => (
-          <span key={f.name} className="avatar" title={f.name}>{f.avatar}</span>
+          <span key={f.name} className="avatar" title={f.name}>{f.name}</span>
         ))}
       </div>
       <div>
@@ -285,8 +302,12 @@ function App() {
                 {activity.name}
                 {expandedActivity.dayIdx === dayIdx && expandedActivity.actIdx === actIdx && (
                   <div className="activity-detail">
+                    <h4>{activity.name}</h4>
                     <p>{activity.desc}</p>
                     <a href={activity.map} target="_blank" rel="noopener noreferrer">Google Maps Direction</a>
+                    <div style={{marginTop: '1em'}}>
+                      <img src={PLACE_IMAGES[activity.name] || '/public/default-location.jpg'} alt={activity.name} style={{maxWidth: '100%', borderRadius: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.07)'}} />
+                    </div>
                   </div>
                 )}
               </li>
@@ -302,7 +323,7 @@ function App() {
       <h2>Expense Tracker <span role="img" aria-label="money">💸</span></h2>
       <div className="avatars">
         {FRIENDS.map(f => (
-          <span key={f.name} className="avatar" title={f.name}>{f.avatar}</span>
+          <span key={f.name} className="avatar" title={f.name}>{f.name}</span>
         ))}
       </div>
       <form onSubmit={addExpense} className="expense-form">

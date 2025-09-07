@@ -111,7 +111,7 @@ body {
   animation: confetti 2s cubic-bezier(.68,-0.55,.27,1.55) forwards;
 }
 .animated-bg {
-  background: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);
+  background: linear-gradient(135deg, #38f9d7 0%, #009ffd 100%);
   animation: bgMove 8s linear infinite alternate;
 }
 @keyframes bgMove {
@@ -218,7 +218,7 @@ ul {
 }
 .avatar {
   font-size: 2.2em;
-  background: #fffbe7;
+  background: #e0f7fa;
   border-radius: 50%;
   padding: 0.3em 0.5em;
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
@@ -226,7 +226,7 @@ ul {
   cursor: pointer;
 }
 .avatar:hover {
-  background: #f9d423;
+  background: #38f9d7;
   transform: scale(1.15) rotate(-8deg);
 }
 @media (max-width: 700px) {
