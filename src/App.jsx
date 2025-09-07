@@ -1,10 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { authenticate, uploadFileToDrive } from './GoogleDriveService'
+import { useState, useRef } from 'react';
+import './App.css';
+import { authenticate, uploadFileToDrive } from './GoogleDriveService';
+
+const TABS = [
+  { label: 'Dashboard', key: 'dashboard', emoji: '📋' },
+  { label: 'Itinerary', key: 'itinerary', emoji: '🗺️' },
+  { label: 'Expenses', key: 'expenses', emoji: '💸' },
+  { label: 'Uploads', key: 'uploads', emoji: '📂' },
+];
+
+const FRIENDS = [
+  { name: 'You', avatar: '🧑' },
+  { name: 'Friend 1', avatar: '👩' },
+  { name: 'Friend 2', avatar: '🧑‍🦱' },
+  { name: 'Friend 3', avatar: '👨' },
+];
 
 function App() {
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [showConfetti, setShowConfetti] = useState(false);
+  const confettiRef = useRef([]);
+
+  // Confetti trigger on tab change
+  const handleTabChange = (tabKey) => {
+    setActiveTab(tabKey);
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 1800);
+  };
+
+  // Generate confetti emojis
+  const confettiEmojis = ['🎉', '🥳', '🍾', '🎊', '🌴', '🍹'];
+
   // Trip details
   const tripDetails = {
     flights: [
@@ -135,98 +161,151 @@ function App() {
     }
   };
 
-  return (
-    <div className="container">
-      <header>
-        <h1>Goa Trip Dashboard</h1>
-      </header>
-      <section className="trip-details">
-        <h2>Trip Details</h2>
-        <div>
-          <h3>Flights</h3>
-          <ul>
-            {tripDetails.flights.map((flight, idx) => (
-              <li key={idx}>
-                {flight.from} to {flight.to} ({flight.date}, {flight.time})<br />
-                {flight.airline} Flight No: {flight.flightNo}
-              </li>
-            ))}
-          </ul>
-          <h3>Hotel</h3>
-          <p>{tripDetails.hotel.name} - {tripDetails.hotel.cost}</p>
-          <h3>Bike Rental</h3>
-          <p>{tripDetails.bikeRental.name} - {tripDetails.bikeRental.location}</p>
-        </div>
-      </section>
-      <section className="itinerary">
-        <h2>Itinerary</h2>
-        {itinerary.map((day, idx) => (
-          <div key={idx} className="itinerary-day">
-            <h3>{day.day}</h3>
-            <ul>
-              {day.activities.map((activity, i) => (
-                <li key={i}>{activity}</li>
-              ))}
-            </ul>
-          </div>
+  // Tab content renderers
+  const renderDashboard = () => (
+    <section className="trip-details fade-in">
+      <h2>Trip Details</h2>
+      <div className="avatars">
+        {FRIENDS.map(f => (
+          <span key={f.name} className="avatar" title={f.name}>{f.avatar}</span>
         ))}
-      </section>
-      {/* Expense Tracker */}
-      <section className="expense-tracker">
-        <h2>Expense Tracker</h2>
-        <form onSubmit={addExpense} className="expense-form">
-          <input
-            type="text"
-            placeholder="Description"
-            value={expenseInput.desc}
-            onChange={e => setExpenseInput({ ...expenseInput, desc: e.target.value })}
-          />
-          <input
-            type="number"
-            placeholder="Amount"
-            value={expenseInput.amount}
-            onChange={e => setExpenseInput({ ...expenseInput, amount: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Paid By (Name)"
-            value={expenseInput.paidBy}
-            onChange={e => setExpenseInput({ ...expenseInput, paidBy: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Split With (comma separated names)"
-            value={expenseInput.splitWith}
-            onChange={e => setExpenseInput({ ...expenseInput, splitWith: e.target.value })}
-          />
-          <button type="submit">Add Expense</button>
-        </form>
+      </div>
+      <div>
+        <h3>Flights</h3>
         <ul>
-          {expenses.map((exp, idx) => (
+          {tripDetails.flights.map((flight, idx) => (
             <li key={idx}>
-              {exp.desc}: ₹{exp.amount} paid by {exp.paidBy}, split with {exp.splitWith}
+              {flight.from} to {flight.to} ({flight.date}, {flight.time})<br />
+              {flight.airline} Flight No: {flight.flightNo}
             </li>
           ))}
         </ul>
-        <h3>Split Summary</h3>
-        <ul>
-          {Object.entries(getSplitSummary()).map(([person, amt], idx) => (
-            <li key={idx}>{person}: ₹{amt.toFixed(2)}</li>
+        <h3>Hotel</h3>
+        <p>{tripDetails.hotel.name} - {tripDetails.hotel.cost}</p>
+        <h3>Bike Rental</h3>
+        <p>{tripDetails.bikeRental.name} - {tripDetails.bikeRental.location}</p>
+      </div>
+    </section>
+  );
+
+  const renderItinerary = () => (
+    <section className="itinerary fade-in">
+      <h2>Itinerary <span role="img" aria-label="map">🗺️</span></h2>
+      {itinerary.map((day, idx) => (
+        <div key={idx} className="itinerary-day">
+          <h3>{day.day}</h3>
+          <ul>
+            {day.activities.map((activity, i) => (
+              <li key={i}>{activity}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  );
+
+  const renderExpenses = () => (
+    <section className="expense-tracker fade-in">
+      <h2>Expense Tracker <span role="img" aria-label="money">💸</span></h2>
+      <div className="avatars">
+        {FRIENDS.map(f => (
+          <span key={f.name} className="avatar" title={f.name}>{f.avatar}</span>
+        ))}
+      </div>
+      <form onSubmit={addExpense} className="expense-form">
+        <input
+          type="text"
+          placeholder="Description"
+          value={expenseInput.desc}
+          onChange={e => setExpenseInput({ ...expenseInput, desc: e.target.value })}
+        />
+        <input
+          type="number"
+          placeholder="Amount"
+          value={expenseInput.amount}
+          onChange={e => setExpenseInput({ ...expenseInput, amount: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Paid By (Name)"
+          value={expenseInput.paidBy}
+          onChange={e => setExpenseInput({ ...expenseInput, paidBy: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Split With (comma separated names)"
+          value={expenseInput.splitWith}
+          onChange={e => setExpenseInput({ ...expenseInput, splitWith: e.target.value })}
+        />
+        <button type="submit">Add Expense</button>
+      </form>
+      <ul>
+        {expenses.map((exp, idx) => (
+          <li key={idx}>
+            {exp.desc}: ₹{exp.amount} paid by {exp.paidBy}, split with {exp.splitWith}
+          </li>
+        ))}
+      </ul>
+      <h3>Split Summary</h3>
+      <ul>
+        {Object.entries(getSplitSummary()).map(([person, amt], idx) => (
+          <li key={idx}>{person}: ₹{amt.toFixed(2)}</li>
+        ))}
+      </ul>
+    </section>
+  );
+
+  const renderUploads = () => (
+    <section className="hotel-upload fade-in">
+      <h2>Hotel/Booking PDF Upload <span role="img" aria-label="folder">📂</span></h2>
+      <p>Upload your PDF files directly to <a href="https://drive.google.com/drive/folders/1ZGPtye_iiqb3lNoIyt9HRejFpxHkXC6x" target="_blank" rel="noopener noreferrer">Google Drive Goa Trip Folder</a>.</p>
+      <iframe
+        src="https://drive.google.com/embeddedfolderview?id=1ZGPtye_iiqb3lNoIyt9HRejFpxHkXC6x#grid"
+        style={{ width: '100%', height: '400px', border: 'none', marginTop: '1rem', borderRadius: '12px' }}
+        title="Goa Trip Files"
+      ></iframe>
+    </section>
+  );
+
+  return (
+    <div className="container animated-bg">
+      <header className="fun-header">
+        <h1>
+          <span role="img" aria-label="glass">🥂</span> Glassmates Goa Trip <span role="img" aria-label="beach">🏖️</span>
+        </h1>
+        <nav className="tabs">
+          {TABS.map(tab => (
+            <button
+              key={tab.key}
+              className={activeTab === tab.key ? 'active' : ''}
+              onClick={() => handleTabChange(tab.key)}
+            >
+              <span style={{fontSize: '1.2em', marginRight: '0.3em'}}>{tab.emoji}</span>
+              {tab.label}
+            </button>
           ))}
-        </ul>
-      </section>
-      {/* Hotel/Booking PDF Upload */}
-      <section className="hotel-upload">
-        <h2>Hotel/Booking PDF Upload</h2>
-        <p>Upload your PDF files directly to <a href="https://drive.google.com/drive/folders/1ZGPtye_iiqb3lNoIyt9HRejFpxHkXC6x" target="_blank" rel="noopener noreferrer">Google Drive Goa Trip Folder</a>.</p>
-        <iframe
-          src="https://drive.google.com/embeddedfolderview?id=1ZGPtye_iiqb3lNoIyt9HRejFpxHkXC6x#grid"
-          style={{ width: '100%', height: '400px', border: 'none', marginTop: '1rem' }}
-          title="Goa Trip Files"
-        ></iframe>
-      </section>
+        </nav>
+      </header>
+      <main>
+        <div className={`tab-content${showConfetti ? ' hide' : ''}`}>
+          {activeTab === 'dashboard' && renderDashboard()}
+          {activeTab === 'itinerary' && renderItinerary()}
+          {activeTab === 'expenses' && renderExpenses()}
+          {activeTab === 'uploads' && renderUploads()}
+        </div>
+        {showConfetti && confettiEmojis.map((emoji, i) => (
+          <span
+            key={i}
+            className="confetti"
+            style={{ left: `${40 + i * 8}%`, animationDelay: `${i * 0.2}s` }}
+            ref={el => confettiRef.current[i] = el}
+          >
+            {emoji}
+          </span>
+        ))}
+      </main>
     </div>
   );
 }
 
-export default App
+export default App;
