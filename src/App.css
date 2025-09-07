@@ -1,0 +1,141 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* App.css - Goa Trip Dashboard styles */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.trip-details, .itinerary {
+  margin-bottom: 2rem;
+}
+h2 {
+  color: #0077b6;
+  margin-bottom: 0.5rem;
+}
+h3 {
+  color: #023e8a;
+  margin-bottom: 0.3rem;
+}
+ul {
+  padding-left: 1.2rem;
+}
+.itinerary-day {
+  background: #e0f7fa;
+  border-radius: 8px;
+  padding: 0.7rem;
+  margin-bottom: 1rem;
+}
+.expense-tracker {
+  background: #fff3e0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+.expense-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.expense-form input {
+  flex: 1 1 120px;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.expense-form button {
+  background: #0077b6;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.expense-form button:hover {
+  background: #023e8a;
+}
+.hotel-upload {
+  background: #f1f8e9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+.hotel-upload input[type="file"] {
+  margin-bottom: 0.5rem;
+}
+.hotel-upload button {
+  background: #34a853;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.hotel-upload button:hover {
+  background: #0c7c3b;
+}
+@media (max-width: 600px) {
+  .container {
+    padding: 0.5rem;
+    max-width: 100vw;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .itinerary-day {
+    padding: 0.5rem;
+  }
+  .expense-form {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+}
